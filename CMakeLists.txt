@@ -15,8 +15,8 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-file(GLOB SRC_CORE_FILES src/Core/*.cpp)
-file(GLOB SRC_GAME_FILES src/Game/*.cpp)
+file(GLOB_RECURSE SRC_CORE_FILES src/Core/*.cpp)
+file(GLOB_RECURSE SRC_GAME_FILES src/Game/*.cpp)
 
 add_executable(LarianBreakout ${SRC_CORE_FILES} ${SRC_GAME_FILES})
 

@@ -15,6 +15,7 @@ namespace Core
 		m_renderTexture.setSmooth(false);
 		//m_window.setFramerateLimit(60);
 		m_window.setVerticalSyncEnabled(true);
+		m_window.setKeyRepeatEnabled(false);
 
 		m_view.setViewport(sf::FloatRect({ 0, 0 }, { 1, 1 }));
 		m_renderTexture.setView(m_view);
@@ -25,6 +26,7 @@ namespace Core
 		isRunning = true;
 
 		m_currentScene->load();
+		m_currentScene->start();
 
 		while (m_window.isOpen())
 		{
@@ -32,6 +34,7 @@ namespace Core
 			{
 				if (event->is<sf::Event::Closed>())
 					m_window.close();
+				m_currentScene->onEvent(&event.value());
 			}
 
 			float dt = m_clock.restart().asSeconds();

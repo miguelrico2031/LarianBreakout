@@ -1,5 +1,9 @@
 #pragma once
 
+namespace sf
+{
+	class Event;
+}
 namespace Core
 {
 	class GameObject;
@@ -10,6 +14,7 @@ namespace Core
 		Behavior(GameObject* gameObject) : m_gameObject(gameObject) {}
 		virtual void start() {}
 		virtual void update(float dt) {}
+		virtual void onEvent(const sf::Event* event) {}
 		virtual void onDestroy() {}
 		GameObject* getGameObject() const { return m_gameObject; }
 	protected:

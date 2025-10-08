@@ -10,10 +10,8 @@ namespace Core
 	class GameObject
 	{
 	public:
-		GameObject(Scene* scene) 
-			: m_scene(scene)
+		GameObject(Scene* scene) : m_scene(scene)
 		{
-
 		}
 		GameObject(Scene* scene, const sf::Texture& spriteTex, int spriteZ = 0)
 			: m_scene(scene), m_sprite(std::make_unique<sf::Sprite>(spriteTex)), m_spriteZ(spriteZ)
@@ -22,6 +20,12 @@ namespace Core
 			m_sprite->setOrigin({ size.x / 2.f, size.y / 2.f });
 		}
 		sf::Sprite* getSprite() const { return m_sprite.get(); }
+		void setTexture(const sf::Texture& tex)
+		{
+			m_sprite->setTexture(tex);
+			auto size = m_sprite->getTexture().getSize();
+			m_sprite->setOrigin({ size.x / 2.f, size.y / 2.f });
+		}
 		int getSpriteZ() const { return m_spriteZ; }
 		void setSpriteZ(int z) { m_spriteZ = z; }
 		
@@ -31,7 +35,10 @@ namespace Core
 		T& addBehavior()
 		{
 			m_behaviors.push_back(std::make_unique<T>(this));
-			m_behaviors.back()->start();
+			if (isSceneStarted()) //otherwise the scene is in charge of starting the behavior
+			{
+				m_behaviors.back()->start();
+			}
 			return *dynamic_cast<T*>(m_behaviors.back().get());
 		}
 
@@ -52,6 +59,15 @@ namespace Core
 
 		const std::vector<std::unique_ptr<Behavior>>& getBehaviors() const { return m_behaviors; }
 	private:
+		bool isSceneStarted() const;
+	public:
+		bool Enabled = true;
+		bool Destroyed = false;
+#ifndef NDEBUG
+		std::vector< std::unique_ptr<sf::Shape>> DebugShapes;
+#endif
+	private:
+
 		std::unique_ptr<sf::Sprite> m_sprite;
 		int m_spriteZ = -1000000;
 		std::vector<std::unique_ptr<Behavior>> m_behaviors;

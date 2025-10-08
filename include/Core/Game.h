@@ -9,11 +9,15 @@ namespace Core
 
 		Game(unsigned int width, unsigned int height, unsigned int scale, const char* windowName);
 		
-		template<typename T>
-		void setScene()
+		template<typename T, typename... Args>
+		void setScene(Args&&... args)
 		{
-			m_currentScene = std::make_unique<T>(this);
-			if (isRunning) m_currentScene->load();
+			m_currentScene = std::make_unique<T>(this, std::forward<Args>(args)...);
+			if (isRunning)
+			{
+				m_currentScene->load();
+				m_currentScene->start();
+			}
 		}
 		void run();
 		sf::Vector2u getDimensions() const { return { m_width, m_height }; }

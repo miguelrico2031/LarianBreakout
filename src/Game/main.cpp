@@ -1,16 +1,16 @@
 #include <Core/Game.h>
-#include <Game/TestScene.h>
+#include <Game/GameConstants.h>
+#include <Game/Level.h>
 
 int main()
 {
+	Core::Game game(WINDOW::WIDTH, WINDOW::HEIGHT, WINDOW::SCALE, WINDOW::NAME);
 
-    constexpr int GAME_WIDTH = 160;
-    constexpr int GAME_HEIGHT = 144;
-    constexpr int SCALE = 4;
-    const char* WINDOW_NAME = "LARIAN TAL";
-
-    Core::Game game(GAME_WIDTH, GAME_HEIGHT, SCALE, WINDOW_NAME);
-    game.setScene<TestScene>();
-    game.run();
-
+	Level::Data data
+	{
+		.rows = 4,
+		.party = { Character::Characters::Fighter, Character::Characters::Wizard }
+	};
+	game.setScene<Level>(data);
+	game.run();
 }
