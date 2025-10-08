@@ -12,10 +12,10 @@ public:
 	virtual void onEvent(const sf::Event* event) override;
 	virtual void update(float dt) override;
 
-	void spawnParty(const std::vector<Character::Characters>& party);
+	void spawnParty(const std::vector<Characters::Type>& Party);
 	void play();
 private:
-	Character* spawnCharacter(Character::Characters c);
+	Character* spawnCharacter(Characters::Type c);
 	void changeSelected(unsigned int idx);
 private:
 	std::vector<Character*> m_party;
