@@ -8,10 +8,10 @@ void BoundsManager::start()
 	m_worldDimensions = m_scene->getGame()->getDimensions();
 }
 
-BoundsManager::BoundCollision BoundsManager::isCollidingWithBounds(const sf::Vector2f& pos, const sf::Vector2u& size)
+BoundsManager::BoundCollision BoundsManager::isCollidingWithBounds(const sf::Vector2f& center, const sf::Vector2u& size)
 {
-	float topPos = pos.y - size.y * .5f;
-	float bottomPos = pos.y + size.y * .5f;
+	float topPos = center.y - size.y * .5f;
+	float bottomPos = center.y + size.y * .5f;
 	float upBound = BOUNDS::PADDING_TOP;
 	float bottomBound = m_worldDimensions.y - BOUNDS::PADDING_BOTTOM;
 	if (topPos <= upBound)
@@ -23,8 +23,8 @@ BoundsManager::BoundCollision BoundsManager::isCollidingWithBounds(const sf::Vec
 		return BoundCollision::Bottom;
 	}
 
-	float leftPos = pos.x - size.x * .5f;
-	float rightPos = pos.x + size.x * .5f;
+	float leftPos = center.x - size.x * .5f;
+	float rightPos = center.x + size.x * .5f;
 	float leftBound = BOUNDS::PADDING_LEFT;
 	float rightBound = m_worldDimensions.x - BOUNDS::PADDING_RIGHT;
 

@@ -5,7 +5,6 @@
 #include <Core/Scene.h>
 #include <Core/Game.h>
 #include <Core/Collision.h>
-#include <algorithm>
 #include <iostream>
 
 void Paddle::start()
@@ -54,7 +53,7 @@ void Paddle::clampToBounds()
 	float halfSizeX = m_gameObject->getSprite()->getTexture().getSize().x * .5f;
 	m_position.x = std::clamp(m_position.x, BOUNDS::PADDING_LEFT + halfSizeX,
 		m_worldDimensions.x - BOUNDS::PADDING_RIGHT - halfSizeX);
-	sf::Vector2f renderPos(std::round(m_position.x), std::round(m_position.y));
+	sf::Vector2f renderPos(roundf(m_position.x), roundf(m_position.y));
 	m_gameObject->getSprite()->setPosition(renderPos); //this prevents jittering of moving objects in low resolutions
 }
 
@@ -67,9 +66,9 @@ void Paddle::checkProjectileCollision()
 
 
 	Core::Collision::AABB paddleAabb;
-	paddleAabb.min = m_position - size1 * .5f;
-	paddleAabb.max = sf::Vector2f{ m_position.x + size1.x * .5f, paddleAabb.min.y };
-	paddleAabb.max.y += PADDLE::COLLISION_HEIGHT;
+	paddleAabb.Min = m_position - size1 * .5f;
+	paddleAabb.Max = sf::Vector2f{ m_position.x + size1.x * .5f, paddleAabb.Min.y };
+	paddleAabb.Max.y += PADDLE::COLLISION_HEIGHT;
 
 
 	const auto& pos2 = m_projectile->getPosition();

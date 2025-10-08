@@ -18,7 +18,7 @@ public:
 	ScalesManager(Core::Scene* scene)
 		: Manager(scene), m_scalesTexture("assets/Scale.png") {}
 
-	void spawnScales(int rows);
+	void spawnScales(int ScaleRows);
 	Scale* checkCollision(const Core::Collision::AABB& aabb) const;
 	Scale* checkCollision(const Core::Collision::Circle& circle) const;
 	std::vector<Scale*>checkCollisionAll(const Core::Collision::Circle& circle);

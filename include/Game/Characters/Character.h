@@ -1,6 +1,7 @@
 #pragma once
 #include <Core/Behavior.h>
 #include <SFML/Graphics.hpp>
+#include <Game/Characters/Characters.h>
 #include <memory>
 
 class Paddle;
@@ -12,15 +13,10 @@ class ProjectileManager;
 class Character : public Core::Behavior
 {
 public:
-	enum class Characters
-	{
-		None = 0,
-		Fighter,
-		Wizard
-	};
+
 public:
-	Character(Core::GameObject* gameObject, const std::filesystem::path& paddlePath, const std::filesystem::path& projPath)
-		: Behavior(gameObject), m_paddleTexture(paddlePath), m_projectileTexture(projPath) {}
+	Character(Core::GameObject* gameObject, const Characters::Data& data)
+		: Behavior(gameObject), Data(data) {}
 	virtual ~Character() = default;
 
 	virtual void initialize(int indexInParty);
@@ -30,17 +26,16 @@ public:
 	unsigned int getIndexInParty() const { return m_indexInParty; }
 	Paddle* getPaddle() const { return m_paddle; }
 	Projectile* getProjectile() const { return m_projectile; }
-
-	virtual Characters getCharacter() const = 0;
 	virtual void onProjectilePaddleCollision() = 0;
 	virtual void onProjectileScaleCollision(Scale* scale) = 0;
 protected:
 	void changeActiveProjectileToOwn();
+public:
+	const Characters::Data& Data;
 protected:
-	unsigned int m_maxAbilityUses;
-	float m_restoreUseTime;
-	sf::Texture m_paddleTexture, m_projectileTexture;
 	unsigned int m_indexInParty;
 	Paddle* m_paddle;
 	Projectile* m_projectile;
+	std::unique_ptr<sf::Texture> m_paddleTexture;
+	std::unique_ptr<sf::Texture> m_projectileTexture;
 };

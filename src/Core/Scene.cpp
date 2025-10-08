@@ -109,7 +109,7 @@ namespace Core
 		return *m_gameObjects.back();
 	}
 
-	GameObject& Scene::createSpriteGameObject(sf::Texture& texture, int z)
+	GameObject& Scene::createSpriteGameObject(const sf::Texture& texture, int z)
 	{
 		m_gameObjects.push_back(std::make_unique<GameObject>(this, texture, z));
 		m_gameObjectsSorted = false;

@@ -6,16 +6,16 @@
 
 
 
-void ScalesManager::spawnScales(int rows)
+void ScalesManager::spawnScales(int ScaleRows)
 {
-	m_rowsBounds.resize(rows);
+	m_rowsBounds.resize(ScaleRows);
 
 	auto dimensions = m_scene->getGame()->getDimensions();
 	auto scaleSize = m_scalesTexture.getSize();
 
 	sf::Vector2u start = { SCALES::START_X, SCALES::START_Y };
 
-	for (int row = 0; row < rows; row++)
+	for (int row = 0; row < ScaleRows; row++)
 	{
 		//new empty array
 		m_scaleRows.push_back({});
@@ -34,8 +34,8 @@ void ScalesManager::spawnScales(int rows)
 		//get the row's bounding box
 		Core::Collision::AABB aabb
 		{
-			.min{startX - scaleSize.x / 2.f, y - scaleSize.y / 2.f},
-			.max{startX - scaleSize.x / 2.f + nScales * scaleSize.x, y + scaleSize.y / 2.f}
+			.Min{startX - scaleSize.x / 2.f, y - scaleSize.y / 2.f},
+			.Max{startX - scaleSize.x / 2.f + nScales * scaleSize.x, y + scaleSize.y / 2.f}
 		};
 		m_rowsBounds[row] = aabb;
 
@@ -84,8 +84,8 @@ Scale* ScalesManager::checkCollision(const Core::Collision::AABB& aabb) const
 			}
 			Core::Collision::Circle scaleCircle
 			{
-				.pos = scale->getGameObject()->getSprite()->getPosition(),
-				.radius = SCALES::COLLISION_RADIUS
+				.Center = scale->getGameObject()->getSprite()->getPosition(),
+				.Radius = SCALES::COLLISION_RADIUS
 			};
 			if (Core::Collision::isColliding(aabb, scaleCircle))
 			{
@@ -115,8 +115,8 @@ Scale* ScalesManager::checkCollision(const Core::Collision::Circle& circle) cons
 			}
 			Core::Collision::Circle scaleCircle
 			{
-				.pos = scale->getGameObject()->getSprite()->getPosition(),
-				.radius = SCALES::COLLISION_RADIUS
+				.Center = scale->getGameObject()->getSprite()->getPosition(),
+				.Radius = SCALES::COLLISION_RADIUS
 			};
 			if (Core::Collision::isColliding(circle, scaleCircle))
 			{
@@ -147,8 +147,8 @@ std::vector<Scale*> ScalesManager::checkCollisionAll(const Core::Collision::Circ
 			}
 			Core::Collision::Circle scaleCircle
 			{
-				.pos = scale->getGameObject()->getSprite()->getPosition(),
-				.radius = SCALES::COLLISION_RADIUS
+				.Center = scale->getGameObject()->getSprite()->getPosition(),
+				.Radius = SCALES::COLLISION_RADIUS
 			};
 			if (Core::Collision::isColliding(circle, scaleCircle))
 			{

@@ -8,16 +8,16 @@ namespace Core
 	public:
 		struct AABB
 		{
-			sf::Vector2f min, max;
+			sf::Vector2f Min, Max;
 		};
 
 		struct Circle
 		{
-			sf::Vector2f pos;
-			float radius;
+			sf::Vector2f Center;
+			float Radius;
 		};
 
-		static AABB getAABB(const sf::Vector2f& pos, const sf::Vector2f& size);
+		static AABB getAABB(const sf::Vector2f& Center, const sf::Vector2f& size);
 
 		static bool isColliding(const AABB& a, const AABB& b);
 		static bool isColliding(const AABB& aabb, const Circle& circle);

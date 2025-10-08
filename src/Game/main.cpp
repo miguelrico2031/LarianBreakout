@@ -8,8 +8,8 @@ int main()
 
 	Level::Data data
 	{
-		.rows = 4,
-		.party = { Character::Characters::Fighter, Character::Characters::Wizard }
+		.ScaleRows = 4,
+		.Party = { Characters::Type::Fighter, Characters::Type::Wizard }
 	};
 	game.setScene<Level>(data);
 	game.run();

@@ -11,8 +11,8 @@ class Level : public Core::Scene
 public:
 	struct Data
 	{
-		unsigned int rows;
-		std::vector<Character::Characters> party;
+		unsigned int ScaleRows;
+		std::vector<Characters::Type> Party;
 	};
 
 public:

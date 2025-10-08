@@ -22,7 +22,7 @@ namespace Core
 		void onEvent(const sf::Event* e);
 		void render(sf::RenderTarget& target);
 		GameObject& createEmptyGameObject();
-		GameObject& createSpriteGameObject(sf::Texture& texture, int z = 0);
+		GameObject& createSpriteGameObject(const sf::Texture& texture, int z = 0);
 		void destroyGameObject(GameObject* gameObject);
 		Game* getGame() const { return m_game; }
 		bool isStarted() const { return m_started; }

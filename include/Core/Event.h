@@ -13,21 +13,21 @@ namespace Core
 		using ObserverID = size_t;
 		struct Observer
 		{
-			ObserverID id;
-			Callback callback;
+			ObserverID ID;
+			Callback Callback;
 		};
 
-		ObserverID subscribe(const Callback& callback)
+		ObserverID subscribe(const Callback& Callback)
 		{
-			auto id = m_lastID++;
-			m_observers.push_back({ id, callback });
-			return id;
+			auto ID = m_lastID++;
+			m_observers.push_back({ ID, Callback });
+			return ID;
 		}
 
-		void unsubscribe(ObserverID id)
+		void unsubscribe(ObserverID ID)
 		{
 			auto it = std::remove_if(m_observers.begin(), m_observers.end(),
-				[id](const Observer& obs) { return obs.id == id; });
+				[ID](const Observer& obs) { return obs.ID == ID; });
 			m_observers.erase(it, m_observers.end());
 		}
 
@@ -35,7 +35,7 @@ namespace Core
 		{
 			for (Observer& obs : m_observers)
 			{
-				if (obs.callback) obs.callback(args...);
+				if (obs.Callback) obs.Callback(args...);
 			}
 		}
 

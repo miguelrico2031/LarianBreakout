@@ -16,9 +16,9 @@ void Level::load()
 	addManager<ProjectileManager>();
 	addManager<CharactersManager>();
 
-	getManager<ScalesManager>()->spawnScales(m_data.rows);
+	getManager<ScalesManager>()->spawnScales(m_data.ScaleRows);
 	getManager<ProjectileManager>()->spawnBaseProjectile();
-	getManager<CharactersManager>()->spawnParty(m_data.party);
+	getManager<CharactersManager>()->spawnParty(m_data.Party);
 }
 
 void Level::start()

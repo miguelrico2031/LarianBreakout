@@ -24,10 +24,10 @@ void CharactersManager::update(float dt)
 }
 
 
-void CharactersManager::spawnParty(const std::vector<Character::Characters>& party)
+void CharactersManager::spawnParty(const std::vector<Characters::Type>& Party)
 {
 	m_projectileManager = m_scene->getManager<ProjectileManager>();
-	for (auto c : party)
+	for (auto c : Party)
 	{
 		auto* character = spawnCharacter(c);
 		int index = m_party.size();
@@ -44,16 +44,16 @@ void CharactersManager::play()
 	c->select(nullptr, m_projectileManager->getActiveProjectile());
 }
 
-Character* CharactersManager::spawnCharacter(Character::Characters c)
+Character* CharactersManager::spawnCharacter(Characters::Type c)
 {
 	Core::GameObject& gO = m_scene->createEmptyGameObject();
 	Character* character = nullptr;
 	switch (c)
 	{
-	case Character::Characters::Fighter:
+	case Characters::Type::Fighter:
 		character = &gO.addBehavior<Fighter>();
 		break;
-	case Character::Characters::Wizard:
+	case Characters::Type::Wizard:
 		character = &gO.addBehavior<Wizard>();
 		break;
 	}

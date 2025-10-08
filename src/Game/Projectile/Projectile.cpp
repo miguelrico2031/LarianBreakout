@@ -6,7 +6,6 @@
 #include <Core/Scene.h>
 #include <Core/Game.h>
 #include <Core/Random.h>
-#include <algorithm>
 #include <iostream>
 
 void Projectile::start()
@@ -31,7 +30,7 @@ void Projectile::update(float dt)
 	sf::Vector2f renderPos(std::round(m_position.x), std::round(m_position.y));
 	m_gameObject->getSprite()->setPosition(renderPos); //this prevents jittering of moving objects in low resolutions
 	
-	//rotate();
+	if(m_rotate) rotate();
 }
 
 
@@ -90,8 +89,8 @@ bool Projectile::checkCollisionWithScales()
 		auto halfSize = sf::Vector2f{ (float)sizeU.x, (float)sizeU.y } *.5f;
 		Core::Collision::AABB aabb
 		{
-			.min = m_position - halfSize,
-			.max = m_position + halfSize
+			.Min = m_position - halfSize,
+			.Max = m_position + halfSize
 		};
 		scale = m_scalesManager->checkCollision(aabb);
 	}
@@ -130,19 +129,19 @@ bool Projectile::checkCollisionWithBounds()
 		return false;
 	case BoundsManager::BoundCollision::Top:
 		m_velocity.y *= -1;
-		m_position.y = std::max(BOUNDS::PADDING_TOP, m_position.y);
+		m_position.y = fmaxf(BOUNDS::PADDING_TOP, m_position.y);
 		break;
 	case BoundsManager::BoundCollision::Bottom:
 		m_velocity.y *= -1;
-		m_position.y = std::min((float)m_worldDimensions.y, m_position.y);
+		m_position.y = fminf((float)m_worldDimensions.y, m_position.y);
 		break;
 	case BoundsManager::BoundCollision::Left:
 		m_velocity.x *= -1;
-		m_position.x = std::max(BOUNDS::PADDING_LEFT, m_position.x);
+		m_position.x = fmaxf(BOUNDS::PADDING_LEFT, m_position.x);
 		break;
 	case BoundsManager::BoundCollision::Right:
 		m_velocity.x *= -1;
-		m_position.x = std::min(m_worldDimensions.x - BOUNDS::PADDING_RIGHT, m_position.x);
+		m_position.x = fminf(m_worldDimensions.x - BOUNDS::PADDING_RIGHT, m_position.x);
 	}
 	return true;
 }

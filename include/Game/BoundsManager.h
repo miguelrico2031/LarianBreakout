@@ -11,7 +11,7 @@ public:	enum class BoundCollision
 public:
 	BoundsManager(Core::Scene* scene) : Manager(scene) {}
 	virtual void start() override;
-	BoundCollision isCollidingWithBounds(const sf::Vector2f& pos, const sf::Vector2u& size);
+	BoundCollision isCollidingWithBounds(const sf::Vector2f& center, const sf::Vector2u& size);
 private:
 	sf::Vector2u m_worldDimensions;
 };

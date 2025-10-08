@@ -11,19 +11,22 @@
 
 void Character::initialize(int indexInParty)
 {
+	m_paddleTexture = std::make_unique<sf::Texture>(Data.PaddleTexturePath);
+	m_projectileTexture = std::make_unique<sf::Texture>(Data.ProjectileTexturePath);
+
 	m_indexInParty = indexInParty;
 
 	auto dimensions = m_gameObject->getScene()->getGame()->getDimensions();
 
-	auto& projectileGO = m_gameObject->getScene()->createSpriteGameObject(m_projectileTexture, PROJECTILE::Z);
+	auto& projectileGO = m_gameObject->getScene()->createSpriteGameObject(*m_projectileTexture, PROJECTILE::Z);
 	projectileGO.getSprite()->setPosition({ dimensions.x / 2.f, PROJECTILE::Y_POS });
 	m_projectile = &projectileGO.addBehavior<Projectile>();
 	m_projectile->OnScaleCollision.subscribe([this](Scale* s) { onProjectileScaleCollision(s); });
 	projectileGO.Enabled = false;
 
-	auto& paddleGO = m_gameObject->getScene()->createSpriteGameObject(m_paddleTexture, PADDLE::Z);
+	auto& paddleGO = m_gameObject->getScene()->createSpriteGameObject(*m_paddleTexture, PADDLE::Z);
 	//the Y is offsetted so the paddle's top face is at Y_POS, not the paddle's center
-	paddleGO.getSprite()->setPosition({ dimensions.x / 2.f, PADDLE::Y_POS - m_paddleTexture.getSize().y * .5f});
+	paddleGO.getSprite()->setPosition({ dimensions.x / 2.f, PADDLE::Y_POS - m_paddleTexture->getSize().y * .5f});
 	m_paddle = &paddleGO.addBehavior<Paddle>();
 	m_paddle->OnProjectileCollision.subscribe([this]() { onProjectilePaddleCollision(); });
 	paddleGO.Enabled = false;
@@ -39,10 +42,10 @@ void Character::select(const Paddle* lastPaddle, Projectile* currentProjectile)
 		return;
 	}
 	//move it to the last paddle's position considering the offset so the top face does not change position
-	const auto& pos = lastPaddle->getPosition();
+	const auto& Center = lastPaddle->getPosition();
 	int lastPaddleHeight = lastPaddle->getGameObject()->getSprite()->getTexture().getSize().y;
-	int topPosY = pos.y - lastPaddleHeight * .5f;
-	sf::Vector2f newPos{ pos.x, topPosY + m_paddleTexture.getSize().y * .5f };
+	int topPosY = Center.y - lastPaddleHeight * .5f;
+	sf::Vector2f newPos{ Center.x, topPosY + m_paddleTexture->getSize().y * .5f };
 	m_paddle->setPosition(newPos);
 }
 
