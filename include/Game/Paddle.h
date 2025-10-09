@@ -14,7 +14,7 @@ public:
 	void setPosition(const sf::Vector2f& p) { m_position = p; }
 	void setProjectile(Projectile* pm);
 public:
-	Core::Event<> OnProjectileCollision;
+	Core::Event<Projectile*> OnProjectileCollision;
 private:
 	void moveWithInput(float dt);
 	void clampToBounds();

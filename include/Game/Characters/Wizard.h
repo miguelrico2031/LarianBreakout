@@ -8,8 +8,7 @@ public:
 		: Character(gameObject, Characters::WizardData) {}
 
 	virtual void initialize(int indexInParty) override;
-	virtual void onProjectilePaddleCollision() override;
-	virtual void onProjectileScaleCollision(Scale* scale) override;
+	virtual void onScaleCollidedWithThisProjectile(Scale* scale) override;
 private:
 	float m_fireBallOverlapRadius;
 };

@@ -22,7 +22,7 @@ namespace Core
 		void onEvent(const sf::Event* e);
 		void render(sf::RenderTarget& target);
 		GameObject& createEmptyGameObject();
-		GameObject& createSpriteGameObject(const sf::Texture& texture, int z = 0);
+		GameObject& createSpriteGameObject(const sf::Texture& texture, int z);
 		void destroyGameObject(GameObject* gameObject);
 		Game* getGame() const { return m_game; }
 		bool isStarted() const { return m_started; }
@@ -53,12 +53,14 @@ namespace Core
 
 	private:
 		void sortGameObjects();
+		void addNewGameObjects();
 		void eraseDestroyedGameObjects();
 	protected:
 		Game* m_game;
 	private:
 		std::unordered_map<std::type_index, std::unique_ptr<Manager>> m_managers;
 		std::vector<std::unique_ptr<GameObject>> m_gameObjects;
+		std::vector<std::unique_ptr<GameObject>> m_newGameObjects;
 		bool m_gameObjectsSorted = true;
 		bool m_started = false;
 	};

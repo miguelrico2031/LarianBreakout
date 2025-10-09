@@ -8,6 +8,4 @@ public:
 		: Character(gameObject, Characters::FighterData) {}
 
 	virtual void initialize(int indexInParty) override;
-	virtual void onProjectilePaddleCollision() override;
-	virtual void onProjectileScaleCollision(Scale* scale) override;
 };

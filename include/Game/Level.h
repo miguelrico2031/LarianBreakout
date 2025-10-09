@@ -13,6 +13,7 @@ public:
 	{
 		unsigned int ScaleRows;
 		std::vector<Characters::Type> Party;
+		sf::Color ClearColor;
 	};
 
 public:
@@ -22,7 +23,7 @@ public:
 	virtual void start() override;
 
 private:
-	void loadFrame();
+	void loadFrameAndBackground();
 
 private:
 	Data m_data;

@@ -1,6 +1,8 @@
 #include <Game/Characters/CharactersManager.h>
 #include <Game/Characters/Fighter.h>
 #include <Game/Characters/Wizard.h>
+#include <Game/Characters/Paladin.h>
+#include <Game/Characters/Bard.h>
 #include <Game/Projectile/ProjectileManager.h>
 #include <Core/GameObject.h>
 #include <Core/Scene.h>
@@ -37,7 +39,7 @@ void CharactersManager::spawnParty(const std::vector<Characters::Type>& Party)
 	}
 }
 
-void CharactersManager::play()
+void CharactersManager::selectInitialCharacter()
 {
 	m_selectedIndex = 0;
 	Character* c = m_party[m_selectedIndex];
@@ -55,6 +57,12 @@ Character* CharactersManager::spawnCharacter(Characters::Type c)
 		break;
 	case Characters::Type::Wizard:
 		character = &gO.addBehavior<Wizard>();
+		break;
+	case Characters::Type::Paladin:
+		character = &gO.addBehavior<Paladin>();
+		break;
+	case Characters::Type::Bard:
+		character = &gO.addBehavior<Bard>();
 		break;
 	}
 	return character;

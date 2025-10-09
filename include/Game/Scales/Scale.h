@@ -5,7 +5,8 @@
 class Scale : public Core::Behavior
 {
 public:
-	Scale(Core::GameObject* gameObject) : Behavior(gameObject) {}
+	Scale(Core::GameObject* gameObject, unsigned int r, unsigned int c)
+		: Behavior(gameObject), Row(r), Col(c) {}
 	
-	unsigned int Row, Col;
+	const unsigned int Row, Col;
 };

@@ -1,5 +1,6 @@
 #include <Game/Projectile/Projectile.h>
 #include <Game/BoundsManager.h>
+#include <Game/GameConstants.h>
 #include <Game/Scales/ScalesManager.h>
 #include <Game/Scales/Scale.h>
 #include <Core/GameObject.h>
@@ -14,8 +15,9 @@ void Projectile::start()
 	m_worldDimensions = m_gameObject->getScene()->getGame()->getDimensions();
 	m_position = m_gameObject->getSprite()->getPosition();
 
-	sf::Vector2f direction = sf::Vector2f{ Core::Random::getFloat(-.75, .75), Core::Random::getFloat(-1, 0) }.normalized();
-	m_velocity = direction * BASE_PROJECTILE_START_SPEED;
+	float ap = PROJECTILE::START_APERTURE;
+	sf::Vector2f direction = sf::Vector2f{ Core::Random::getFloat(-ap, ap), Core::Random::getFloat(-1, 0) }.normalized();
+	m_velocity = direction * PROJECTILE::START_SPEED;
 
 }
 
@@ -29,8 +31,15 @@ void Projectile::update(float dt)
 	m_position += m_velocity * dt;
 	sf::Vector2f renderPos(std::round(m_position.x), std::round(m_position.y));
 	m_gameObject->getSprite()->setPosition(renderPos); //this prevents jittering of moving objects in low resolutions
-	
-	if(m_rotate) rotate();
+
+	switch (m_mode)
+	{
+	case Mode::LookForward:
+		rotateToLookForward();
+		break;
+	case Mode::Spin:
+		m_gameObject->getSprite()->setRotation(m_gameObject->getSprite()->getRotation() + sf::degrees(300.f * dt));
+	}
 }
 
 
@@ -42,16 +51,16 @@ void Projectile::onPaddleCollision(const sf::Vector2f& paddlePos, const sf::Vect
 	//the farther from the center, the greater the angle
 	//value between -1 and 1
 	float distanceFromCenter = std::clamp((m_position.x - paddlePos.x) / (paddleSize.x * .5f), -1.f, 1.f);
-	sf::Angle appliedBounceAngle = MAX_BOUNCE_ANGLE * distanceFromCenter;
+	sf::Angle appliedBounceAngle = sf::degrees(PROJECTILE::MAX_BOUNCE_ANGLE) * distanceFromCenter;
 
- 	float speed = m_velocity.length();
+	float speed = m_velocity.length();
 	m_velocity.x = speed * sinf(appliedBounceAngle.asRadians());
 	m_velocity.y = -speed * cosf(appliedBounceAngle.asRadians());
 }
 
-void Projectile::rotate()
+void Projectile::rotateToLookForward()
 {
-	static std::vector<sf::Vector2f> snaps{{1, 1}, {1, -1}, {-1, -1}, {-1, 1}};
+	static std::vector<sf::Vector2f> snaps{ { 1, 1 }, {1, -1}, {-1, -1}, {-1, 1} };
 	static bool norm = false;
 	if (!norm)
 	{
@@ -94,7 +103,7 @@ bool Projectile::checkCollisionWithScales()
 		};
 		scale = m_scalesManager->checkCollision(aabb);
 	}
-	
+
 	if (scale != nullptr)
 	{
 		const auto& scalePos = scale->getGameObject()->getSprite()->getPosition();
@@ -106,9 +115,11 @@ bool Projectile::checkCollisionWithScales()
 
 		OnScaleCollision.invoke(scale);
 
-		//destroy the scale
-		m_scalesManager->destroyScale(scale);
-
+		if (m_destroysScales)
+		{
+			//destroy the scale
+			m_scalesManager->destroyScale(scale);
+		}
 
 		return true;
 	}

@@ -13,7 +13,10 @@ public:
 	virtual void update(float dt) override;
 
 	void spawnParty(const std::vector<Characters::Type>& Party);
-	void play();
+	void selectInitialCharacter();
+
+	const std::vector<Character*>& getParty() const { return m_party; }
+	Character* getSelected() { return m_party[m_selectedIndex]; }
 private:
 	Character* spawnCharacter(Characters::Type c);
 	void changeSelected(unsigned int idx);

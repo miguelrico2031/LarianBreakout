@@ -6,6 +6,8 @@ namespace Core
 {
 	void Scene::start()
 	{
+		addNewGameObjects();
+
 		for (auto& [_, manager] : m_managers)
 		{
 			manager->start();
@@ -24,6 +26,8 @@ namespace Core
 
 	void Scene::update(float dt)
 	{
+		addNewGameObjects();
+
 		for (auto& [_, manager] : m_managers)
 		{
 			manager->update(dt);
@@ -43,6 +47,7 @@ namespace Core
 				}
 			}
 		}
+
 		eraseDestroyedGameObjects();
 	}
 
@@ -105,15 +110,15 @@ namespace Core
 
 	GameObject& Scene::createEmptyGameObject()
 	{
-		m_gameObjects.push_back(std::make_unique<GameObject>(this));
-		return *m_gameObjects.back();
+		m_newGameObjects.push_back(std::make_unique<GameObject>(this));
+		return *m_newGameObjects.back();
 	}
 
 	GameObject& Scene::createSpriteGameObject(const sf::Texture& texture, int z)
 	{
-		m_gameObjects.push_back(std::make_unique<GameObject>(this, texture, z));
+		m_newGameObjects.push_back(std::make_unique<GameObject>(this, texture, z));
 		m_gameObjectsSorted = false;
-		return *m_gameObjects.back();
+		return *m_newGameObjects.back();
 	}
 
 
@@ -127,6 +132,16 @@ namespace Core
 		std::sort(m_gameObjects.begin(), m_gameObjects.end(),
 			[](const auto& a, const auto& b) { return a->getSpriteZ() < b->getSpriteZ(); });
 		m_gameObjectsSorted = true;
+	}
+
+	void Scene::addNewGameObjects()
+	{
+		if (m_newGameObjects.empty()) return;
+		for (auto& gameObject : m_newGameObjects)
+		{
+			m_gameObjects.push_back(std::move(gameObject));
+		}
+		m_newGameObjects.clear();
 	}
 
 	void Scene::eraseDestroyedGameObjects()

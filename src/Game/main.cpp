@@ -9,7 +9,7 @@ int main()
 	Level::Data data
 	{
 		.ScaleRows = 4,
-		.Party = { Characters::Type::Fighter, Characters::Type::Wizard }
+		.Party = { Characters::Type::Fighter, Characters::Type::Wizard, Characters::Type::Paladin, Characters::Type::Bard }
 	};
 	game.setScene<Level>(data);
 	game.run();

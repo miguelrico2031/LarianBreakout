@@ -60,6 +60,12 @@ void Paddle::clampToBounds()
 
 void Paddle::checkProjectileCollision()
 {
+	//don't check if the projectile is going upwards
+	if (m_projectile->getVelocity().y < 0)
+	{
+		return;
+	}
+
 	const auto& pos1 = m_position;
 	const auto& size1u = m_gameObject->getSprite()->getTexture().getSize();
 	const auto& size1 = sf::Vector2f{ (float)size1u.x, (float)size1u.y };
@@ -78,7 +84,7 @@ void Paddle::checkProjectileCollision()
 	if (Core::Collision::isColliding(paddleAabb, Core::Collision::getAABB(pos2, size2)))
 	{
 		m_projectile->onPaddleCollision(pos1, size1);
-		OnProjectileCollision.invoke();
+		OnProjectileCollision.invoke(m_projectile);
 
 		//disable the collision check for a short time
 		m_collisionDisabled = true;

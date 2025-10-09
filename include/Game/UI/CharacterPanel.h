@@ -1,28 +1,24 @@
 #pragma once
 #include <Core/Behavior.h>
+#include <Game/Characters/Character.h>
 #include <SFML/Graphics.hpp>
+#include <vector>
 
-class Projectile;
 class CharacterPanel : public Core::Behavior
 {
 public:
-	CharacterPanel(Core::GameObject* gameObject) : Behavior(gameObject) {}
+	CharacterPanel(Core::GameObject* gameObject, Character& character);
 	virtual void start() override;
-	virtual void update(float dt) override;
-	const sf::Vector2f& getPosition() const { return m_position; }
-	void setPosition(const sf::Vector2f& p) { m_position = p; }
-	void setProjectile(Projectile* pm);
-public:
-	Core::Event<> OnProjectileCollision;
+
+	void onAbilityUsesChanged(unsigned int remainingUses);
+	void onCooldownChanged(float remainingCooldown);
+	void onCharacterSelectionChanged(bool isSelected);
 private:
-	void moveWithInput(float dt);
-	void clampToBounds();
-	void checkProjectileCollision();
-	void waitAndEnableCollision(float dt);
+	void placeRelativeToPanel(sf::Sprite& sprite, const sf::Vector2f& relativePos);
 private:
-	sf::Vector2f m_position;
-	sf::Vector2u m_worldDimensions;
-	Projectile* m_projectile;
-	float m_collisionDisabledTimer = 0.f;
-	bool m_collisionDisabled = false;
+	Character& m_character;
+	sf::Texture m_useDotTexture, m_useDotBgTexture, m_cooldownBarTexture, m_selectedTexture, m_symbolTexture;
+	Core::GameObject* m_selectionFrame;
+	std::vector<Core::GameObject*> m_useDots;
+	sf::Sprite* m_cooldownBarSprite;
 };

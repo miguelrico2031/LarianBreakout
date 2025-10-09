@@ -20,12 +20,11 @@ namespace Core
 			}
 		}
 		void run();
-		sf::Vector2u getDimensions() const { return { m_width, m_height }; }
+		const sf::Vector2u& getDimensions() const { return m_dimensions; }
 	private:
 		sf::RenderWindow m_window;
 		sf::Clock m_clock;
-		unsigned int m_width;
-		unsigned int m_height;
+		sf::Vector2u m_dimensions;
 		unsigned int m_scale;
 		sf::RenderTexture m_renderTexture;
 		std::unique_ptr<sf::Sprite> m_renderSprite;

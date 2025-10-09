@@ -1,15 +1,21 @@
 #include <Game/Characters/Wizard.h>
 #include <Game/Projectile/Projectile.h>
+#include <Game/Projectile/ProjectileManager.h>
 #include <Game/Scales/Scale.h>
 #include <Game/Scales/ScalesManager.h>
 #include <Core/GameObject.h>
 #include <Core/Scene.h>
+#include <Core/Animator.h>
 #include <iostream>
 
 
 void Wizard::initialize(int indexInParty)
 {
 	Character::initialize(indexInParty);
+
+	auto& animator = m_projectile->getGameObject()->addBehavior<Core::Animator>();
+	auto animationKey = Core::Animator::registerAnimation({ "assets/FireBall1.png", "assets/FireBall2.png", "assets/FireBall3.png" });
+	animator.playAnimationLoop(animationKey, 10.f);
 
 	const auto& projSize = m_projectile->getGameObject()->getSprite()->getTexture().getSize();
 
@@ -22,23 +28,17 @@ void Wizard::initialize(int indexInParty)
 	m_projectile->changeColliderToCircle(colliderRadius);
 }
 
-void Wizard::onProjectilePaddleCollision()
+void Wizard::onScaleCollidedWithThisProjectile(Scale* scale)
 {
-	std::cout << "WIZARD COLLISION\n";
-	changeActiveProjectileToOwn();
-}
-
-void Wizard::onProjectileScaleCollision(Scale* scale)
-{
-	std::cout << "\tWIZARD FIREBALL KILLED SCALE\n";
-
 	//get all the scales overlapped with the big radius
 	auto* sm = m_gameObject->getScene()->getManager<ScalesManager>();
 	auto scales = sm->checkCollisionAll(Core::Collision::Circle{ m_projectile->getPosition(), m_fireBallOverlapRadius });
-	
+
 	for (auto* s : scales)
 	{
 		if (s == scale) continue;
 		sm->destroyScale(s);
 	}
+
+	Character::onScaleCollidedWithThisProjectile(scale);
 }

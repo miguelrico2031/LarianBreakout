@@ -6,6 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include <array>
 #include <vector>
+#include <Core/Animator.h>
 
 namespace Core
 {
@@ -18,14 +19,16 @@ public:
 	ScalesManager(Core::Scene* scene)
 		: Manager(scene), m_scalesTexture("assets/Scale.png") {}
 
+	virtual void start() override;
 	void spawnScales(int ScaleRows);
 	Scale* checkCollision(const Core::Collision::AABB& aabb) const;
 	Scale* checkCollision(const Core::Collision::Circle& circle) const;
+	std::vector<Scale*>checkCollisionAll(const Core::Collision::AABB& aabb);
 	std::vector<Scale*>checkCollisionAll(const Core::Collision::Circle& circle);
 	void destroyScale(Scale* scale);
 private:
 	sf::Texture m_scalesTexture;
-	using ScaleRow = std::array<Scale*, SCALES::SCALES_PER_EVEN_ROW>;
+	using ScaleRow = std::array<Scale*, SCALES::SCALES_PER_ODD_ROW>;
 	//this is a vector of arrays, modeling a grid.
 	//odd rows initially contain N scales. Even rows contain N-1 scales
 	//and all of those scales are offsetted in the x axis by scale width / 2
@@ -34,4 +37,6 @@ private:
 	//vector containing an AABB per row that is the row's bounds
 	//used to avoid checking collisions with a row if the other object is outside its bounds
 	std::vector<Core::Collision::AABB> m_rowsBounds;
+
+	Core::Animator::Key m_scaleDestroyKey;
 };

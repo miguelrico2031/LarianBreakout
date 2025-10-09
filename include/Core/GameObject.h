@@ -31,10 +31,10 @@ namespace Core
 		
 		Scene* getScene() const { return m_scene; }
 
-		template<typename T>
-		T& addBehavior()
+		template <typename T, typename... Args>
+		T& addBehavior(Args&&... args)
 		{
-			m_behaviors.push_back(std::make_unique<T>(this));
+			m_behaviors.push_back(std::make_unique<T>(this, std::forward<Args>(args)...));
 			if (isSceneStarted()) //otherwise the scene is in charge of starting the behavior
 			{
 				m_behaviors.back()->start();
