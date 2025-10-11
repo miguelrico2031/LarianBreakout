@@ -2,6 +2,7 @@
 #include <Core/GameObject.h>
 #include <Core/Behavior.h>
 #include <Core/Manager.h>
+#include <Core/Text.h>
 #include <vector>
 #include <unordered_map>
 #include <memory>
@@ -24,6 +25,7 @@ namespace Core
 		GameObject& createEmptyGameObject();
 		GameObject& createSpriteGameObject(const sf::Texture& texture, int z);
 		void destroyGameObject(GameObject* gameObject);
+		Text& createText();
 		Game* getGame() const { return m_game; }
 		bool isStarted() const { return m_started; }
 
@@ -61,6 +63,7 @@ namespace Core
 		std::unordered_map<std::type_index, std::unique_ptr<Manager>> m_managers;
 		std::vector<std::unique_ptr<GameObject>> m_gameObjects;
 		std::vector<std::unique_ptr<GameObject>> m_newGameObjects;
+		std::vector<std::unique_ptr<Text>> m_texts;
 		bool m_gameObjectsSorted = true;
 		bool m_started = false;
 	};

@@ -1,24 +1,29 @@
 #include <Game/Scales/ScalesManager.h>
 #include <Game/Scales/Scale.h>
+#include <Game/Level/LevelManager.h>
 #include <Core/GameObject.h>
 #include <Core/Scene.h>
 #include <Core/Game.h>
 
-
-void ScalesManager::start()
+ScalesManager::ScalesManager(Core::Scene* scene)
+	: Manager(scene)
 {
+	const auto& fileName = m_scene->getManager<LevelManager>()->Data.ScaleFileName;
+
+	m_scalesTexture.loadFromFile("assets/" + fileName + "1.png");
 	m_scaleDestroyKey = Core::Animator::registerAnimation({
-		"assets/Scale1.png",
-		"assets/Scale2.png",
-		"assets/Scale3.png",
-		"assets/Scale4.png",
-		"assets/Scale5.png",
-		"assets/Scale6.png",
+		"assets/" + fileName + "1.png",
+		"assets/" + fileName + "2.png",
+		"assets/" + fileName + "3.png",
+		"assets/" + fileName + "4.png",
+		"assets/" + fileName + "5.png",
+		"assets/" + fileName + "6.png",
 		});
 }
 
 void ScalesManager::spawnScales(int ScaleRows)
 {
+	m_remainingScales = 0;
 	m_rowsBounds.resize(ScaleRows);
 
 	auto dimensions = m_scene->getGame()->getDimensions();
@@ -60,6 +65,7 @@ void ScalesManager::spawnScales(int ScaleRows)
 			auto& scale = scaleGO.addBehavior<Scale>(row, col);
 			scaleGO.addBehavior<Core::Animator>();
 			scaleRow[col] = &scale; //add the scale to the array to keep track of it
+			m_remainingScales++;
 		}
 
 #ifndef NDEBUG //debug visually the AABBs
@@ -207,7 +213,14 @@ void ScalesManager::destroyScale(Scale* scale)
 {
 	m_scaleRows[scale->Row][scale->Col] = nullptr;
 	scale->getGameObject()->getBehavior<Core::Animator>()->playAnimationOnce(m_scaleDestroyKey, 15.f,
-		[this, scale]() {m_scene->destroyGameObject(scale->getGameObject()); });
+		[this, scale]()
+		{
+			m_scene->destroyGameObject(scale->getGameObject()); 
+			if (--m_remainingScales == 0)
+			{
+				m_scene->getManager<LevelManager>()->winLevel();
+			}
+		});
 	
 }
 

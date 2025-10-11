@@ -16,10 +16,8 @@ class Scale;
 class ScalesManager : public Core::Manager
 {
 public:
-	ScalesManager(Core::Scene* scene)
-		: Manager(scene), m_scalesTexture("assets/Scale.png") {}
+	ScalesManager(Core::Scene* scene);
 
-	virtual void start() override;
 	void spawnScales(int ScaleRows);
 	Scale* checkCollision(const Core::Collision::AABB& aabb) const;
 	Scale* checkCollision(const Core::Collision::Circle& circle) const;
@@ -39,4 +37,5 @@ private:
 	std::vector<Core::Collision::AABB> m_rowsBounds;
 
 	Core::Animator::Key m_scaleDestroyKey;
+	unsigned int m_remainingScales;
 };

@@ -18,9 +18,10 @@ void Projectile::start()
 
 void Projectile::setRandomVelocity()
 {
-	float ap = PROJECTILE::START_APERTURE;
-	sf::Vector2f direction = sf::Vector2f{ Core::Random::getFloat(-ap, ap), Core::Random::getFloat(-1, 0) }.normalized();
+	float angle = Core::Random::getFloat(-PROJECTILE::START_APERTURE, PROJECTILE::START_APERTURE);
+	sf::Vector2f direction = sf::Vector2f{ 0, -1 }.rotatedBy(sf::degrees(angle));
 	m_velocity = direction * PROJECTILE::START_SPEED;
+
 }
 
 
@@ -41,7 +42,7 @@ void Projectile::update(float dt)
 		rotateToLookForward();
 		break;
 	case Mode::Spin:
-		m_gameObject->getSprite()->setRotation(m_gameObject->getSprite()->getRotation() + sf::degrees(300.f * dt));
+		m_gameObject->getSprite()->rotate(sf::degrees(PROJECTILE::SPIN_SPEED * dt));
 	}
 }
 
@@ -63,13 +64,13 @@ void Projectile::onPaddleCollision(const sf::Vector2f& paddlePos)
 
 void Projectile::rotateToLookForward()
 {
-	static std::vector<sf::Vector2f> snaps{ { 1, 1 }, {1, -1}, {-1, -1}, {-1, 1} };
-	static bool norm = false;
-	if (!norm)
-	{
-		for (auto& v : snaps) v = v.normalized();
-		norm = true;
-	}
+	//select the bet snap direction and then get its angle to rotate the sprite
+
+	static std::vector<sf::Vector2f> snaps
+	{ 
+		sf::Vector2f{ 1,  1}.normalized(), sf::Vector2f{1, -1}.normalized(), 
+		sf::Vector2f{-1, -1}.normalized(), sf::Vector2f{-1, 1}.normalized()
+	};
 
 	sf::Vector2f dir = m_velocity.normalized();
 	sf::Vector2f bestDir;
@@ -170,6 +171,7 @@ bool Projectile::checkCollisionWithBounds()
 
 void Projectile::correctVelocityDirection()
 {
+	//set a minimum y direction to avoid the projectile bouncing almost only horizontally bwtween left and right bounds
 	float speed = m_velocity.length();
 	auto direction = m_velocity / speed;
 	if (fabs(direction.y) < PROJECTILE::MIN_BOUND_BOUNCE_Y)

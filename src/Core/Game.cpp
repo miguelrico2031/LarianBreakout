@@ -21,10 +21,19 @@ namespace Core
 		m_renderTexture.setView(m_view);
 	}
 
-	void Game::setActiveScene(SceneKey scene)
+	void Game::changeScene(SceneKey scene, bool unloadCurrent)
 	{
-		m_activeScene = m_loadedScenes.at(scene).get();
-		m_activeSceneKey = scene;
+		if (m_activeScene == nullptr)
+		{
+			m_activeScene = m_loadedScenes.at(scene).get();
+			m_activeSceneKey = scene;
+			m_activeScene->start();
+		}
+		else
+		{
+			m_sceneToChange = scene;
+			m_unloadCurrent = unloadCurrent;
+		}
 	}
 
 	void Game::unloadScene(SceneKey scene)
@@ -40,9 +49,6 @@ namespace Core
 	void Game::run()
 	{
 		isRunning = true;
-
-		m_activeScene->load();
-		m_activeScene->start();
 
 		while (m_window.isOpen())
 		{
@@ -64,8 +70,25 @@ namespace Core
 			m_window.clear();
 			m_window.draw(*m_renderSprite);
 			m_window.display();
+
+			if (m_sceneToChange != -1)
+			{
+				handleSceneChange();
+			}
 		}
 		isRunning = false;
+	}
+
+	void Game::handleSceneChange()
+	{
+		if (m_unloadCurrent)
+		{
+			unloadScene(m_activeSceneKey);
+		}
+		m_activeScene = m_loadedScenes.at(m_sceneToChange).get();
+		m_activeSceneKey = m_sceneToChange;
+		m_activeScene->start();
+		m_sceneToChange = -1;
 	}
 
 }

@@ -7,7 +7,8 @@
 void HeartsManager::start()
 {
 	m_heartTex.loadFromFile("assets/Heart.png");
-	for (size_t i = 0; i < LEVEL::START_LIVES; i++)
+	auto* lm = m_scene->getManager<LevelManager>();
+	for (size_t i = 0; i < lm->Data.StartLives; i++)
 	{
 		auto& heart = m_scene->createSpriteGameObject(m_heartTex, HUD::Z);
 		heart.getSprite()->setOrigin({ 0, 0 });
@@ -23,7 +24,7 @@ void HeartsManager::start()
 		m_hearts.push_back(&heart);
 	}
 
-	m_scene->getManager<LevelManager>()->OnLivesChanged.subscribe([this](auto l) { onLivesChanged(l); });
+	lm->OnLivesChanged.subscribe([this](auto l) { onLivesChanged(l); });
 }
 
 void HeartsManager::onLivesChanged(unsigned int lives)

@@ -17,15 +17,19 @@ namespace Core
 		{
 			SceneKey key = m_nextSceneKey++;
 			m_loadedScenes[key] = std::make_unique<T>(this, std::forward<Args>(args)...);
+			m_loadedScenes[key]->load();
 			return key;
 		}
-		void setActiveScene(SceneKey scene);
+		SceneKey getActiveScene() const { return m_activeSceneKey; }
+		void changeScene(SceneKey scene, bool unloadCurrent = true);
 		void unloadScene(SceneKey scene);
 
 
 		void run();
 
 		const sf::Vector2u& getDimensions() const { return m_dimensions; }
+	private:
+		void handleSceneChange();
 	private:
 		sf::RenderWindow m_window;
 		sf::Clock m_clock;
@@ -38,6 +42,8 @@ namespace Core
 		SceneKey m_nextSceneKey = 0;
 		SceneKey m_activeSceneKey = -1;
 		Scene* m_activeScene = nullptr;
+		SceneKey m_sceneToChange = -1;
+		bool m_unloadCurrent;
 		std::unordered_map<SceneKey, std::unique_ptr<Scene>> m_loadedScenes;
 	};
 }

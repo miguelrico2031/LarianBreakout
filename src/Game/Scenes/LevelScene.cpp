@@ -16,7 +16,7 @@ void LevelScene::load()
 	Scene::load();
 
 	loadFrameAndBackground();
-	addManager<LevelManager>();
+	addManager<LevelManager>(m_data);
 	addManager<BoundsManager>();
 	addManager<ScalesManager>();
 	addManager<ProjectileManager>();
@@ -40,19 +40,6 @@ void LevelScene::start()
 	
 }
 
-void LevelScene::render(sf::RenderTarget& target)
-{
-	Scene::render(target);
-
-	//static sf::Font font("assets/dogicapixel.ttf");
-	//static sf::Text text(font);
-	//text.setString("Hello World!");
-	//text.setPosition({ 10, 14 });
-	//text.setCharacterSize(8);
-	//text.setFillColor({ 255,255,255,255 });
-	//target.draw(text);
-}
-
 void LevelScene::loadFrameAndBackground()
 {
 	m_textures["frame"] = sf::Texture("assets/Frame.png");
@@ -61,7 +48,8 @@ void LevelScene::loadFrameAndBackground()
 	sf::Vector2f center{ dimensions.x / 2.f, dimensions.y / 2.f };
 	frame.getSprite()->setPosition(center);
 
-	m_textures["background"] = sf::Texture("assets/Background.png");
+
+	m_textures["background"] = sf::Texture(m_data.BackgroundPath);
 	auto& bg = createSpriteGameObject(m_textures["background"],-200);
 	center = { dimensions.x / 2.f, dimensions.y / 2.f };
 	bg.getSprite()->setPosition(center);

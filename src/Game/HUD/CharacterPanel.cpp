@@ -11,7 +11,7 @@ CharacterPanel::CharacterPanel(Core::GameObject* gameObject,  Character& charact
 	m_useDotBgTexture.loadFromFile("assets/UseDotBg.png");
 	m_cooldownBarTexture.loadFromFile("assets/CooldownBar.png");
 	m_selectedTexture.loadFromFile("assets/CharacterPanelSelectionFrame.png");
-	m_symbolTexture.loadFromFile(character.Data.SymbolTexturePath);
+	m_symbolTexture.loadFromFile(character.Data.HUDSymbolTexturePath);
 }
 
 

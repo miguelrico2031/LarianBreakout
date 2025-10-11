@@ -15,11 +15,6 @@ namespace BOUNDS
 	constexpr float PADDING_BOTTOM = 32.f;
 }
 
-namespace LEVEL
-{
-	constexpr unsigned int START_LIVES = 3;
-	constexpr float LOSE_LIFE_DURATION = 1.f;
-}
 
 namespace SCALES
 {
@@ -44,11 +39,12 @@ namespace PADDLE
 namespace PROJECTILE
 {
 	constexpr float START_SPEED = 70.f;
-	constexpr float START_APERTURE = .5f;
+	constexpr float START_APERTURE = 45.f;
 	constexpr int START_Y = 100;
 	constexpr int Z = 90;
 	constexpr float MAX_BOUNCE_ANGLE = 70.f;
 	constexpr float MIN_BOUND_BOUNCE_Y = .2f;
+	constexpr float SPIN_SPEED = 300.f;
 }
 
 namespace HUD
@@ -68,6 +64,9 @@ namespace HUD
 	constexpr float HEART_START_X = 7.f;
 	constexpr float HEART_Y = 3.f;
 	constexpr float HEART_PADDING = 3.f;
+
+	constexpr float LOSE_HEART_DURATION = 1.f;
+
 }
 
 namespace FIREBALL
@@ -78,4 +77,19 @@ namespace FIREBALL
 namespace SMITE
 {
 	constexpr float HITBOX_WIDTH = 8;
+}
+
+namespace VICTORY
+{
+	constexpr float SLAIN_TEXT_DURATION = 2.f;
+	constexpr float INFO_TEXT_DURATION = 6.f;
+	constexpr unsigned int SLAIN_TEXT_Y = 15;
+	constexpr unsigned int INFO_TEXT_Y = 30;
+}
+
+namespace CHARACTERS
+{
+	constexpr unsigned int TITLE_TEXT_Y = 5;
+	constexpr unsigned int DESCRIPTION_TEXT_Y = 70;
+	constexpr unsigned int SYMBOL_TEXT_Y = 52;
 }

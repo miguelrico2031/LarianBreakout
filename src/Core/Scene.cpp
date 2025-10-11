@@ -1,6 +1,7 @@
 #include <Core/Scene.h>
 #include <Core/Game.h>
 #include <Core/AsyncManager.h>
+#include <Core/SaveManager.h>
 #include <algorithm>
 
 namespace Core
@@ -8,7 +9,9 @@ namespace Core
 	void Scene::load()
 	{
 		addManager<AsyncManager>();
+		addManager<SaveManager>();
 	}
+
 	void Scene::start()
 	{
 		addNewGameObjects();
@@ -111,6 +114,11 @@ namespace Core
 			}
 		}
 #endif
+
+		for (const auto& text : m_texts)
+		{
+			text->draw(target);
+		}
 	}
 
 	GameObject& Scene::createEmptyGameObject()
@@ -131,6 +139,13 @@ namespace Core
 	{
 		gameObject->Destroyed = true;
 	}
+
+	Text& Scene::createText()
+	{
+		m_texts.push_back(std::make_unique<Text>());
+		return *m_texts.back();
+	}
+
 
 	void Scene::sortGameObjects()
 	{
