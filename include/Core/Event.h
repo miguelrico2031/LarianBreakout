@@ -5,12 +5,14 @@
 
 namespace Core
 {
+	using ObserverID = size_t;
+
+
 	template<typename... Args>
 	class Event
 	{
 	public:
 		using Callback = std::function<void(Args...)>;
-		using ObserverID = size_t;
 		struct Observer
 		{
 			ObserverID ID;

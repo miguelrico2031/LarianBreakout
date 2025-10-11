@@ -1,9 +1,14 @@
 #include <Core/Scene.h>
 #include <Core/Game.h>
+#include <Core/AsyncManager.h>
 #include <algorithm>
 
 namespace Core
 {
+	void Scene::load()
+	{
+		addManager<AsyncManager>();
+	}
 	void Scene::start()
 	{
 		addNewGameObjects();

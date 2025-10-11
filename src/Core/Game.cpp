@@ -21,12 +21,28 @@ namespace Core
 		m_renderTexture.setView(m_view);
 	}
 
+	void Game::setActiveScene(SceneKey scene)
+	{
+		m_activeScene = m_loadedScenes.at(scene).get();
+		m_activeSceneKey = scene;
+	}
+
+	void Game::unloadScene(SceneKey scene)
+	{
+		if (scene == m_activeSceneKey)
+		{
+			m_activeSceneKey = -1;
+			m_activeScene = nullptr;
+		}
+		m_loadedScenes.erase(scene);
+	}
+
 	void Game::run()
 	{
 		isRunning = true;
 
-		m_currentScene->load();
-		m_currentScene->start();
+		m_activeScene->load();
+		m_activeScene->start();
 
 		while (m_window.isOpen())
 		{
@@ -34,15 +50,15 @@ namespace Core
 			{
 				if (event->is<sf::Event::Closed>())
 					m_window.close();
-				m_currentScene->onEvent(&event.value());
+				m_activeScene->onEvent(&event.value());
 			}
 
 			float dt = m_clock.restart().asSeconds();
-			m_currentScene->update(dt);
+			m_activeScene->update(dt);
 
 
 			m_renderTexture.clear();
-			m_currentScene->render(m_renderTexture);
+			m_activeScene->render(m_renderTexture);
 			m_renderTexture.display();
 
 			m_window.clear();
@@ -51,4 +67,5 @@ namespace Core
 		}
 		isRunning = false;
 	}
+
 }

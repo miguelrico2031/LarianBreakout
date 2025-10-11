@@ -1,7 +1,7 @@
 #include <Game/Characters/Paladin.h>
 #include <Game/Projectile/Projectile.h>
 #include <Game/Projectile/ProjectileManager.h>
-#include <Game/Paddle.h>
+#include <Game/Level/Paddle.h>
 #include <Game/Scales/ScalesManager.h>
 #include <Game/GameConstants.h>
 #include <Core/Scene.h>

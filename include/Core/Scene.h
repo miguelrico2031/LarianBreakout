@@ -16,11 +16,11 @@ namespace Core
 	public:
 		Scene(Game* game) : m_game(game) {}
 		virtual ~Scene() = default;
-		virtual void load() = 0;
+		virtual void load();
 		virtual void start();
 		virtual void update(float dt);
-		void onEvent(const sf::Event* e);
-		void render(sf::RenderTarget& target);
+		virtual void onEvent(const sf::Event* e);
+		virtual void render(sf::RenderTarget& target);
 		GameObject& createEmptyGameObject();
 		GameObject& createSpriteGameObject(const sf::Texture& texture, int z);
 		void destroyGameObject(GameObject* gameObject);

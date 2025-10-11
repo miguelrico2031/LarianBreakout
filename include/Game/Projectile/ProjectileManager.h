@@ -18,9 +18,12 @@ public:
 	Projectile* getFireProjectile() const { return m_fireProjectile; }
 	void setActiveProjectile(Projectile* projectile);
 private:
+	void onActiveProjectileCollisionWithBottomBound();
+private:
 	Projectile* m_activeProjectile = nullptr;
 	Projectile* m_baseProjectile = nullptr;
 	Projectile* m_fireProjectile = nullptr;
 	sf::Texture m_baseProjTex, m_fireProjTex;
-	Core::Event<Scale*>::ObserverID m_baseProjectileScaleColObserver;
+	Core::ObserverID m_baseProjectileScaleColObserver;
+	Core::ObserverID m_activeProjectileBottomColObserver;
 };

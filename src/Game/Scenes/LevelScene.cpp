@@ -1,22 +1,28 @@
-#include <Game/Level.h>
+#include <Game/Scenes/LevelScene.h>
 #include <Core/Game.h>
-#include <Game/Paddle.h>
+#include <Game/Level/Paddle.h>
 #include <Game/Projectile/Projectile.h>
 #include <Game/Projectile/ProjectileManager.h>
 #include <Game/Scales/ScalesManager.h>
 #include <Game/Characters/CharactersManager.h>
-#include <Game/BoundsManager.h>
-#include <Game/UI/CharacterPanelManager.h>
+#include <Game/Level/BoundsManager.h>
+#include <Game/Level/LevelManager.h>
+#include <Game/HUD/CharacterPanelManager.h>
+#include <Game/HUD/HeartsManager.h>
 #include <iostream> 
 
-void Level::load()
+void LevelScene::load()
 {
+	Scene::load();
+
 	loadFrameAndBackground();
+	addManager<LevelManager>();
 	addManager<BoundsManager>();
 	addManager<ScalesManager>();
 	addManager<ProjectileManager>();
 	addManager<CharactersManager>();
 	addManager<CharacterPanelManager>();
+	addManager<HeartsManager>();
 
 	getManager<ScalesManager>()->spawnScales(m_data.ScaleRows);
 	getManager<ProjectileManager>()->spawnBaseProjectile();
@@ -25,7 +31,7 @@ void Level::load()
 	getManager<CharacterPanelManager>()->spawnCharacterPanels();
 }
 
-void Level::start()
+void LevelScene::start()
 {
 	Scene::start();
 
@@ -34,7 +40,20 @@ void Level::start()
 	
 }
 
-void Level::loadFrameAndBackground()
+void LevelScene::render(sf::RenderTarget& target)
+{
+	Scene::render(target);
+
+	//static sf::Font font("assets/dogicapixel.ttf");
+	//static sf::Text text(font);
+	//text.setString("Hello World!");
+	//text.setPosition({ 10, 14 });
+	//text.setCharacterSize(8);
+	//text.setFillColor({ 255,255,255,255 });
+	//target.draw(text);
+}
+
+void LevelScene::loadFrameAndBackground()
 {
 	m_textures["frame"] = sf::Texture("assets/Frame.png");
 	auto& frame = createSpriteGameObject(m_textures["frame"], 100);

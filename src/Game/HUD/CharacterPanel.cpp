@@ -1,4 +1,4 @@
-#include <Game/UI/CharacterPanel.h>
+#include <Game/HUD/CharacterPanel.h>
 #include <Core/GameObject.h>
 #include <Core/Scene.h>
 #include <Core/Game.h>
@@ -37,14 +37,14 @@ void CharacterPanel::start()
 
 	auto& barGO = scene->createSpriteGameObject(m_cooldownBarTexture, z);
 	m_cooldownBarSprite = barGO.getSprite();
-	sf::Vector2f relativePos{ UI::PANEL_COOLDOWN_BAR_X , UI::PANEL_COOLDOWN_BAR_Y };
+	sf::Vector2f relativePos{ HUD::PANEL_COOLDOWN_BAR_X , HUD::PANEL_COOLDOWN_BAR_Y };
 	placeRelativeToPanel(*m_cooldownBarSprite, relativePos);
 	
 	for (int i = 0; i < m_character.Data.MaxAbilityUses; i++)
 	{
 		auto* dot = &scene->createSpriteGameObject(m_useDotTexture, z);
-		float y = UI::FIRST_USE_Y + i * (m_useDotTexture.getSize().y + UI::USE_PADDING);
-		sf::Vector2f relativePos{ UI::USE_X ,y };
+		float y = HUD::FIRST_USE_Y + i * (m_useDotTexture.getSize().y + HUD::USE_PADDING);
+		sf::Vector2f relativePos{ HUD::USE_X ,y };
 		placeRelativeToPanel(*dot->getSprite(), relativePos);
 		m_useDots.push_back(dot);
 

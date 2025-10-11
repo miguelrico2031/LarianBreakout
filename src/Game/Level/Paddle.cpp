@@ -1,4 +1,4 @@
-#include <Game/Paddle.h>
+#include <Game/Level/Paddle.h>
 #include <Game/Projectile/Projectile.h>
 #include <Game/GameConstants.h>
 #include <Core/GameObject.h>
@@ -83,7 +83,7 @@ void Paddle::checkProjectileCollision()
 
 	if (Core::Collision::isColliding(paddleAabb, Core::Collision::getAABB(pos2, size2)))
 	{
-		m_projectile->onPaddleCollision(pos1, size1);
+		m_projectile->onPaddleCollision(pos1);
 		OnProjectileCollision.invoke(m_projectile);
 
 		//disable the collision check for a short time

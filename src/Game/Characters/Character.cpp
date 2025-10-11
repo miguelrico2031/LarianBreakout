@@ -3,12 +3,12 @@
 #include <Core/Game.h>
 #include <Core/Scene.h>
 #include <Core/GameObject.h>
-#include <Game/Paddle.h>
+#include <Game/Level/Paddle.h>
 #include <Game/Projectile/Projectile.h>
 #include <Game/Projectile/ProjectileManager.h>
 #include <Game/Scales/ScalesManager.h>
 #include <Game/GameConstants.h>
-#include <Game/BoundsManager.h>
+#include <Game/Level/BoundsManager.h>
 
 void Character::initialize(int indexInParty)
 {
@@ -20,7 +20,7 @@ void Character::initialize(int indexInParty)
 	const auto& dimensions = m_gameObject->getScene()->getGame()->getDimensions();
 
 	auto& projectileGO = m_gameObject->getScene()->createSpriteGameObject(*m_projectileTexture, PROJECTILE::Z);
-	projectileGO.getSprite()->setPosition({ dimensions.x / 2.f, PROJECTILE::Y_POS });
+	projectileGO.getSprite()->setPosition({ dimensions.x / 2.f, PROJECTILE::START_Y });
 	m_projectile = &projectileGO.addBehavior<Projectile>();
 	m_projectile->OnScaleCollision.subscribe([this](Scale* s) { onScaleCollidedWithThisProjectile(s); });
 	projectileGO.Enabled = false;

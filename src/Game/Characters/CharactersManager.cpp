@@ -7,7 +7,6 @@
 #include <Core/GameObject.h>
 #include <Core/Scene.h>
 #include <memory>
-#include <iostream>
 
 void CharactersManager::onEvent(const sf::Event* event)
 {
@@ -16,15 +15,9 @@ void CharactersManager::onEvent(const sf::Event* event)
 		if (e->code == sf::Keyboard::Key::Space)
 		{
 			changeSelected((m_selectedIndex + 1) % m_party.size());
-			std::cout << "cambiado a " << m_selectedIndex << std::endl;
 		}
 	}
 }
-
-void CharactersManager::update(float dt)
-{
-}
-
 
 void CharactersManager::spawnParty(const std::vector<Characters::Type>& Party)
 {

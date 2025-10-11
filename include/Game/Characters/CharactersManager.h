@@ -10,7 +10,6 @@ class CharactersManager : public Core::Manager
 public:
 	CharactersManager(Core::Scene* scene) : Manager(scene) {}
 	virtual void onEvent(const sf::Event* event) override;
-	virtual void update(float dt) override;
 
 	void spawnParty(const std::vector<Characters::Type>& Party);
 	void selectInitialCharacter();

@@ -3,6 +3,7 @@
 #include <Game/Projectile/ProjectileManager.h>
 #include <Game/Scales/Scale.h>
 #include <Game/Scales/ScalesManager.h>
+#include <Game/GameConstants.h>
 #include <Core/GameObject.h>
 #include <Core/Scene.h>
 #include <Core/Animator.h>
@@ -23,7 +24,7 @@ void Wizard::initialize(int indexInParty)
 
 	//collider is smaller than sprite size, so when it collides with a scale the sprite could be touching several scales
 	//and with the overlap radius we later destroy all those scales
-	float colliderRadius = m_fireBallOverlapRadius * /*TODO: don't hardcode this */ .75f;
+	float colliderRadius = m_fireBallOverlapRadius * FIREBALL::COLLIDER_RADIUS_FRACTION;
 
 	m_projectile->changeColliderToCircle(colliderRadius);
 }

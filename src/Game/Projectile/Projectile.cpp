@@ -1,5 +1,5 @@
 #include <Game/Projectile/Projectile.h>
-#include <Game/BoundsManager.h>
+#include <Game/Level/BoundsManager.h>
 #include <Game/GameConstants.h>
 #include <Game/Scales/ScalesManager.h>
 #include <Game/Scales/Scale.h>
@@ -14,12 +14,15 @@ void Projectile::start()
 	m_scalesManager = m_gameObject->getScene()->getManager<ScalesManager>();
 	m_worldDimensions = m_gameObject->getScene()->getGame()->getDimensions();
 	m_position = m_gameObject->getSprite()->getPosition();
+}
 
+void Projectile::setRandomVelocity()
+{
 	float ap = PROJECTILE::START_APERTURE;
 	sf::Vector2f direction = sf::Vector2f{ Core::Random::getFloat(-ap, ap), Core::Random::getFloat(-1, 0) }.normalized();
 	m_velocity = direction * PROJECTILE::START_SPEED;
-
 }
+
 
 void Projectile::update(float dt)
 {
@@ -45,12 +48,12 @@ void Projectile::update(float dt)
 
 
 
-void Projectile::onPaddleCollision(const sf::Vector2f& paddlePos, const sf::Vector2f& paddleSize)
+void Projectile::onPaddleCollision(const sf::Vector2f& paddlePos)
 {
 	//the projectile bounces at an angle dependant on how far from the paddle horizontal center it collided.
 	//the farther from the center, the greater the angle
 	//value between -1 and 1
-	float distanceFromCenter = std::clamp((m_position.x - paddlePos.x) / (paddleSize.x * .5f), -1.f, 1.f);
+	float distanceFromCenter = std::clamp((m_position.x - paddlePos.x) / (PADDLE::MAX_WIDTH * .5f), -1.f, 1.f);
 	sf::Angle appliedBounceAngle = sf::degrees(PROJECTILE::MAX_BOUNCE_ANGLE) * distanceFromCenter;
 
 	float speed = m_velocity.length();
@@ -130,29 +133,48 @@ bool Projectile::checkCollisionWithScales()
 bool Projectile::checkCollisionWithBounds()
 {
 	auto* sprite = m_gameObject->getSprite();
-	auto size = sprite->getTexture().getSize();
+	auto size = m_isCircle
+		? sf::Vector2u{(unsigned int)floorf(m_circleRadius), (unsigned int)floorf(m_circleRadius) }
+		: sprite->getTexture().getSize();
 
 	auto* bounds = m_gameObject->getScene()->getManager<BoundsManager>();
 
-	switch (bounds->isCollidingWithBounds(m_position, size))
+	int boundsFlags = bounds->isCollidingWithBounds(m_position, size);
+	if (boundsFlags == BoundCollision::None)
 	{
-	case BoundsManager::BoundCollision::None:
 		return false;
-	case BoundsManager::BoundCollision::Top:
-		m_velocity.y *= -1;
-		m_position.y = fmaxf(BOUNDS::PADDING_TOP, m_position.y);
-		break;
-	case BoundsManager::BoundCollision::Bottom:
-		m_velocity.y *= -1;
-		m_position.y = fminf((float)m_worldDimensions.y, m_position.y);
-		break;
-	case BoundsManager::BoundCollision::Left:
-		m_velocity.x *= -1;
+	}
+	if (boundsFlags & BoundCollision::Left)
+	{
+		m_velocity.x = fabs(m_velocity.x);
 		m_position.x = fmaxf(BOUNDS::PADDING_LEFT, m_position.x);
-		break;
-	case BoundsManager::BoundCollision::Right:
-		m_velocity.x *= -1;
-		m_position.x = fminf(m_worldDimensions.x - BOUNDS::PADDING_RIGHT, m_position.x);
+		correctVelocityDirection();
+	}
+	else if (boundsFlags & BoundCollision::Right)
+	{
+		m_velocity.x = -fabs(m_velocity.x);
+		m_position.x = fmaxf(BOUNDS::PADDING_LEFT, m_position.x);
+		correctVelocityDirection();
+	}
+	if (boundsFlags & BoundCollision::Top)
+	{
+		m_velocity.y = fabs(m_velocity.y);
+		m_position.y = fmaxf(BOUNDS::PADDING_TOP, m_position.y);
+	}
+	else if (boundsFlags & BoundCollision::Bottom)
+	{
+		OnBottomBoundCollision.invoke();
 	}
 	return true;
+}
+
+void Projectile::correctVelocityDirection()
+{
+	float speed = m_velocity.length();
+	auto direction = m_velocity / speed;
+	if (fabs(direction.y) < PROJECTILE::MIN_BOUND_BOUNCE_Y)
+	{
+		direction.y =  PROJECTILE::MIN_BOUND_BOUNCE_Y;
+		m_velocity = direction.normalized() * speed;
+	}
 }

@@ -7,6 +7,7 @@ namespace sf
 namespace Core
 {
 	class Scene;
+	class GameObject;
 	class Manager //manager that only has an instance per scene
 	{
 	public:

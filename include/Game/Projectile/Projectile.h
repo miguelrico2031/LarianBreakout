@@ -18,24 +18,28 @@ public:
 public:
 	Projectile(Core::GameObject* gameObject) : Behavior(gameObject) {}
 	virtual void start() override;
+	void setRandomVelocity();
 	virtual void update(float dt) override;
-	void onPaddleCollision(const sf::Vector2f& paddlePos, const sf::Vector2f& paddleSize);
+	void onPaddleCollision(const sf::Vector2f& paddlePos);
 	sf::Vector2f getPosition() const { return m_position; }
 	void setPosition(const sf::Vector2f& p) { m_position = p; }
 	sf::Vector2f getVelocity() const { return m_velocity; }
 	void setVelocity(const sf::Vector2f& v) { m_velocity = v; }
 	//by default the projectile uses an AABB to check collisions agaisnt scales. this changes it to be a circle
-	void changeColliderToCircle(float Radius) { m_isCircle = true; m_circleRadius = Radius; }
+	void changeColliderToCircle(float radius) { m_isCircle = true; m_circleRadius = radius; }
 	Mode getMode() const { return m_mode; }
 	void setMode(Mode m) { m_mode = m; }
 	bool getDestroysScales() const { return m_destroysScales; }
 	void setDestroysScales(bool d) { m_destroysScales = d; }
+
 public:
 	Core::Event<Scale*> OnScaleCollision;
+	Core::Event<> OnBottomBoundCollision;
 private:
 	void rotateToLookForward();
 	bool checkCollisionWithScales();
 	bool checkCollisionWithBounds();
+	void correctVelocityDirection();
 private:
 	sf::Vector2f m_position;
 	sf::Vector2f m_velocity;

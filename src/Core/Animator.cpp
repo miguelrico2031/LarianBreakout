@@ -3,7 +3,7 @@
 
 namespace Core
 {
-	std::unordered_map<Animator::Key, Animator::Animation> Animator::m_animations;
+	std::unordered_map<Animator::Key, Animator::Animation> Animator::s_animations;
 
 	void Animator::update(float dt)
 	{
@@ -39,18 +39,18 @@ namespace Core
 	{
 		static Animator::Key nextKey = 0;
 		auto key = nextKey++;
-		m_animations[key].Key = key;
+		s_animations[key].Key = key;
 		for (const auto& path : texturePaths)
 		{
 			auto tex = std::make_unique<sf::Texture>(path);
-			m_animations[key].Textures.push_back(std::move(tex));
+			s_animations[key].Textures.push_back(std::move(tex));
 		}
 		return key;
 	}
 
 	void Animator::playAnimationOnce(Animator::Key key, float speed, std::function<void()> onFinishedCallback)
 	{
-		auto& animation = m_animations.at(key);
+		auto& animation = s_animations.at(key);
 		m_currentAnimation = &animation;
 		m_currentFrame = 0;
 		m_currentCallback = onFinishedCallback;
@@ -63,7 +63,7 @@ namespace Core
 
 	void Animator::playAnimationLoop(Animator::Key key, float speed)
 	{
-		auto& animation = m_animations.at(key);
+		auto& animation = s_animations.at(key);
 		m_currentAnimation = &animation;
 		m_currentFrame = 0;
 		m_delayBetwwenFrames = 1.f / speed;

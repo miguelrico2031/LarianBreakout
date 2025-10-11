@@ -29,7 +29,7 @@ namespace Core
 			Key Key;
 		};
 	private:
-		static std::unordered_map<Key, Animation> m_animations;
+		static std::unordered_map<Key, Animation> s_animations;
 		Animation* m_currentAnimation = nullptr;
 		size_t m_currentFrame;
 		std::function<void()> m_currentCallback = nullptr;
